@@ -36,8 +36,6 @@ def decode_base64_rot13_aes(encoded_text: str, key: str) -> str:
     decrypted_data = aes_decrypt(encrypted_data, key.encode()).decode()
     return codecs.decode(decrypted_data, 'rot_13')
 
-
-# Comando del bot para cifrar
 async def cipher_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if len(context.args) < 2:
         await update.message.reply_text("Please provide a key and the text to be encrypted.")
@@ -53,7 +51,7 @@ async def cipher_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     encrypted_text = encode_base64_rot13_aes(text, key)
     await update.message.reply_text(f"{encrypted_text}")
         
-# Comando del bot para descifrar
+
 async def decipher_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if len(context.args) < 2:
         await update.message.reply_text("Please provide a key and the text to decrypt.")
@@ -82,7 +80,33 @@ async def decode_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     encoded_text = ' '.join(context.args)
     decoded_text = decode_base64_rot13(encoded_text)
     await update.message.reply_text(f"{decoded_text}")
-    
+
+async def mastodon(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await update.message.reply_text("https://mastodon.social/@codebreaker1337/with_replies") 
+
+async def github(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await update.message.reply_text("https://github.com/Codebreaker1337")
+
+async def gist(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+
+    secret_word = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+
+    # Check if the user has provided a word with the command
+    if context.args:
+        user_provided_word = context.args[0]        
+        # Check if the provided word matches the secret word
+        if user_provided_word.lower() == secret_word:
+            # If the words match, you could send a special gist link or a success message
+            await update.message.reply_text("https://gist.github.com/Codebreaker1337/XXXXXXXXXXXXXXXXXXXXXXXXX")
+        else:
+            # If the words don't match, inform the user
+            await update.message.reply_text("The secret word you provided is incorrect.")
+    else:
+        # If no word is provided, prompt the user to enter a secret word
+        await update.message.reply_text("Please provide a secret word with the /gist command.")
+
+        
+        
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     help_text = """
     Commands:
@@ -94,23 +118,12 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     /decipher [key] [encoded text] - decode Base64, AES CBC text to ROT13
     /mastodon - provides an interesting url 
     /github - provides an interesting url 
-     
+    /gist [secret] - provides an interesting url     
     """
     await update.message.reply_text(help_text)
 
-
-
-async def mastodon(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text("https://mastodon.social/@codebreaker1337/with_replies") 
-
-async def github(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text("https://github.com/Codebreaker1337")
-
-async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text("You said " + str(update.message.text))
-
 def main() -> None:
-    application = Application.builder().token("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX").build()
+    application = Application.builder().token("TOKEN").build()
 
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("help", help_command))
@@ -119,8 +132,8 @@ def main() -> None:
     application.add_handler(CommandHandler("cipher", cipher_command))
     application.add_handler(CommandHandler("decipher", decipher_command))
     application.add_handler(CommandHandler("mastodon", mastodon))
-    application.add_handler(CommandHandler("github", github))
-    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
+    application.add_handler(CommandHandler("github", github)) 
+    application.add_handler(CommandHandler("gist", gist))    
 
     application.run_polling()
 
