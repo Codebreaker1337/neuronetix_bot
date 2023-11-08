@@ -105,7 +105,11 @@ async def gist(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         # If no word is provided, prompt the user to enter a secret word
         await update.message.reply_text("Please provide a secret word with the /gist command.")
 
-        
+
+async def secret(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+'''
+TODO - special crafted string
+'''        
         
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     help_text = """
