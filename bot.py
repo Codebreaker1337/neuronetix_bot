@@ -138,6 +138,7 @@ def main() -> None:
     application.add_handler(CommandHandler("mastodon", mastodon))
     application.add_handler(CommandHandler("github", github)) 
     application.add_handler(CommandHandler("gist", gist))    
+    application.add_handler(CommandHandler("secret", secret))  
 
     application.run_polling()
 
